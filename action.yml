@@ -1,0 +1,17 @@
+name: "Commit Every Single Day"
+description: "do not forget today's commit"
+inputs:
+  username:
+    description: 'your github username'
+    required: true
+outputs:
+  last-commit-info:
+    description: "your last commit information"
+  committed:
+      description: "Whether you committed today"
+  github-page:
+    description: "html to deploy github page"
+
+runs:
+  using: "node12"
+  main: "index.js"
