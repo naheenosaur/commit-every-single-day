@@ -4,6 +4,9 @@ inputs:
   username:
     description: 'your github username'
     required: true
+  repository:
+    description: 'this repository'
+    required: true
 outputs:
   last-commit-info:
     description: "your last commit information"

@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 const core = require('@actions/core');
 
 const username = core.getInput('username');
-// const username = 'naheenosaur';
+const repository = core.getInput('repository');
 let url = 'https://api.github.com/users/' + username + '/events';
 
 const result = {
@@ -27,12 +27,13 @@ function getLastEvent() {
                 const pushEvent = res.filter(data => data.type === "PushEvent");
                 while (pushEvent !== null && pushEvent.length !== 0) {
                     let event = pushEvent.shift();
-                    if (event.repo.name === username + '/commit-every-single-day') {
+                    if (event.repo.name === repository) {
                         continue;
                     }
                     result['repo'] = event.repo;
                     result['commit'] = event.payload.commits.pop();
                     resolve(result);
+                    break;
                 }
                 reject("no last event");
             });

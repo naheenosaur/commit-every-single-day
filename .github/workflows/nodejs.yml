@@ -7,15 +7,23 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.PRIVATE_GITHUB_TOKEN }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      GITHUB_ACTOR: ${{ secrets.GITHUB_ACTOR }}
+      GITHUB_REPOSITORY: ${{ secrets.GITHUB_REPOSITORY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v1
       - run: npm install
+      - name: set variables
+        id: variables
+        run: |
+          echo ::set-output name=username::$GITHUB_ACTOR
+          echo ::set-output name=repository::$GITHUB_REPOSITORY
       - name: Check last commit
         uses: ./ # Uses an action in the root directory
         id: check-commit
         with:
-          username: 'naheenosaur'
+          username: ${{ steps.variables.outputs.username }}
+          repository: ${{ steps.variables.outputs.repository }}
 
       - name: post uncommitted message
         if: steps.check-commit.outputs.committed == 'false'
