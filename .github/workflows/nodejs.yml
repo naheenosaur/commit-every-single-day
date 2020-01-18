@@ -18,6 +18,7 @@ jobs:
         run: |
           echo ::set-output name=username::$GITHUB_ACTOR
           echo ::set-output name=repository::$GITHUB_REPOSITORY
+
       - name: Check last commit
         uses: ./ # Uses an action in the root directory
         id: check-commit
@@ -25,7 +26,7 @@ jobs:
           username: ${{ steps.variables.outputs.username }}
           repository: ${{ steps.variables.outputs.repository }}
 
-      - name: post uncommitted message
+      - name: Post uncommitted message
         if: steps.check-commit.outputs.committed == 'false'
         uses: 8398a7/action-slack@v2
         with:
@@ -38,7 +39,7 @@ jobs:
                 text: "오늘의 커밋을 잊지 마세요 ! :herb:",
             }
 
-      - name: post committed message
+      - name: Post committed message
         if: steps.check-commit.outputs.committed == 'true'
         uses: 8398a7/action-slack@v2
         with:
@@ -50,3 +51,19 @@ jobs:
             {
                 text: "오늘 커밋 하셨네요 !! :herb:",
             }
+
+      - name: Build github page
+        if: steps.check-commit.outputs.committed == 'true'
+        run: |
+          mkdir public
+          cat > public/index.html << EOL
+          ${{ steps.check-commit.outputs.github-page }}
+          EOL
+          touch .nojekyll
+
+      - name: Deploy
+        if: steps.check-commit.outputs.committed == 'true'
+        uses: crazy-max/ghaction-github-pages@v1
+        with:
+          target_branch: gh-pages
+          build_dir: public
