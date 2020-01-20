@@ -1,7 +1,7 @@
 name: commit-alert
 on:
   schedule:
-    - cron:  '0 23 * * *'
+    - cron:  '0 14 * * *' # UTC time
 
 jobs:
   build:
@@ -27,6 +27,7 @@ jobs:
         with:
           username: ${{ steps.variables.outputs.username }}
           repository: ${{ steps.variables.outputs.repository }}
+          timezone: 'Asia/Seoul'
 
       - name: Post uncommitted message
         if: steps.check-commit.outputs.committed == 'false'

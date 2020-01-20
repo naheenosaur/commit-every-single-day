@@ -7,6 +7,9 @@ inputs:
   repository:
     description: 'this repository'
     required: true
+  timezone:
+    description: 'your timezone'
+    default: 'Asia/Seoul'
 outputs:
   last-commit-info:
     description: "your last commit information"

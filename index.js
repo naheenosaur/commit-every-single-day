@@ -1,8 +1,10 @@
 const fetch = require('node-fetch');
 const core = require('@actions/core');
+const moment = require('moment-timezone');
 
 const username = core.getInput('username');
 const repository = core.getInput('repository');
+const timezone = core.getInput('timezone');
 let url = 'https://api.github.com/users/' + username + '/events';
 
 const result = {
@@ -84,8 +86,8 @@ function createHtml() {
 
 function committedToday(date) {
     return new Promise((resolve) => {
-        let lastCommitDate = new Date(date).toLocaleDateString();
-        let today = new Date().toLocaleDateString();
+        let lastCommitDate = new Date(moment(date).tz(timezone)).toDateString();
+        let today = new Date(moment().tz(timezone)).toDateString();
         resolve(lastCommitDate === today);
     })
 }
